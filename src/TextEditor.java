@@ -1,6 +1,8 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 public class TextEditor implements ActionListener {
     JFrame frame;
@@ -70,13 +72,46 @@ public class TextEditor implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e){
         if(e.getSource()==newFile){
-
-        }
-        if(e.getSource()==openFile){
-
+            TextEditor newTextEditor=new TextEditor();
         }
         if(e.getSource()==saveFile){
+            JFileChooser fileChooser=new JFileChooser("c:");
 
+            fileChooser.setApproveButtonText("Save");
+            int chooserOption =fileChooser.showSaveDialog(null);
+            if(chooserOption==JFileChooser.APPROVE_OPTION){
+                File file=new File(fileChooser.getSelectedFile().getAbsoluteFile()+".txt");
+                String filePath= file.getPath();
+                try{
+                    BufferedWriter outFile=null;
+                    outFile = new BufferedWriter(new FileWriter(file));
+                    textArea.write(outFile);
+                    outFile.close();
+                }
+                catch(Exception exception){
+                    System.out.println("exception");
+                }
+            }
+        }
+        if(e.getSource()==openFile){
+            JFileChooser fileChooser= new JFileChooser("c:");
+            int choosePath=fileChooser.showOpenDialog(null);
+            if(choosePath==JFileChooser.APPROVE_OPTION){
+            File file =fileChooser.getSelectedFile();
+            String filePath=file.getPath();
+
+            try{
+                BufferedReader bufferedReader=new BufferedReader(new FileReader(filePath));
+                String Intermediate="",output="";
+                while ((Intermediate =bufferedReader.readLine())!=null){
+                    output+= Intermediate + "\n";
+                }
+                textArea.setText(output);
+            }
+            catch (Exception exception){
+                System.out.println(exception);
+            }
+            }
         }
         if(e.getSource()==cut){
             textArea.cut();
